@@ -1,5 +1,7 @@
 <template>
-  <div>login</div>
+  <div>
+    <el-button>gg</el-button>
+  </div>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue'
