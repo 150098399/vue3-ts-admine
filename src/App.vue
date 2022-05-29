@@ -1,7 +1,8 @@
 <template>
   <div id="nav">
-    <router-link to="/login">login</router-link> |
-    <router-link to="/main">main</router-link>
+    <div>{{ $store.state.name }}</div>
+    <router-link to="/login">登录</router-link> |
+    <router-link to="/main">首页</router-link>
   </div>
   <router-view />
 </template>
