@@ -1,5 +1,4 @@
 import { App } from 'vue'
-import 'element-plus/theme-chalk/base.css'
 import 'element-plus/dist/index.css'
 
 import { ElButton } from 'element-plus/lib'
