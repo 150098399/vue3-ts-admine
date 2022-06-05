@@ -5,5 +5,8 @@ module.exports = {
     config.resolve.alias
       .set('@', path.resolve(__dirname, 'src'))
       .set('views', '@/views')
+  },
+  devServer: {
+    open: true
   }
 }
