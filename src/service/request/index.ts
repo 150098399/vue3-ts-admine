@@ -55,24 +55,46 @@ class HYRequest {
     )
   }
 
-  request(config: HYRequestConfig): void {
-    if (config.interceptors?.requestInterceptor) {
-      config = config.interceptors.requestInterceptor(config)
-    }
-
-    if (config.showLoading === false) {
-      this.showLoading = config.showLoading
-    }
-
-    this.instance.request(config).then((res) => {
-      if (config.interceptors?.responseInterceptor) {
-        res = config.interceptors.responseInterceptor(res)
+  request<T>(config: HYRequestConfig): Promise<T> {
+    return new Promise((resolve, reject) => {
+      if (config.interceptors?.requestInterceptor) {
+        config = config.interceptors.requestInterceptor(config)
       }
-      console.log(res)
 
-      // loading恢复初始值
-      this.showLoading = true
+      if (config.showLoading === false) {
+        this.showLoading = config.showLoading
+      }
+
+      this.instance
+        .request<any, T>(config)
+        .then((res) => {
+          if (config.interceptors?.responseInterceptor) {
+            res = config.interceptors.responseInterceptor(res)
+          }
+
+          // loading恢复初始值
+          this.showLoading = true
+
+          resolve(res)
+        })
+        .catch((err) => {
+          this.showLoading = true
+          reject(err)
+          return err
+        })
     })
+  }
+
+  get<T>(config: HYRequestConfig): Promise<T> {
+    return this.request<T>({ ...config, method: 'GET' })
+  }
+
+  post<T>(config: HYRequestConfig): Promise<T> {
+    return this.request<T>({ ...config, method: 'POST' })
+  }
+
+  patch<T>(config: HYRequestConfig): Promise<T> {
+    return this.request<T>({ ...config, method: 'PATCH' })
   }
 }
 

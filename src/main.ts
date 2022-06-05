@@ -32,7 +32,16 @@ app.use(store).use(router).mount('#app')
 //   }
 // })
 
-hyRequest.request({
-  url: '/home/multidata',
-  method: 'GET'
-})
+interface DataType {
+  url: any
+  returnCode: string
+  success: boolean
+}
+
+hyRequest
+  .get<DataType>({
+    url: '/home/multidata'
+  })
+  .then((res) => {
+    console.log(res)
+  })
