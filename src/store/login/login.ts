@@ -8,12 +8,14 @@ import {
 } from '@/service/login/login'
 import { IAccount } from '@/service/login/types'
 import localCache from '@/utils/cache'
+import router from '@/router'
 const longinModule: Module<ILoginState, IRootState> = {
   namespaced: true,
   state() {
     return {
       token: '',
-      userInfo: {}
+      userInfo: {},
+      userMenus: []
     }
   },
   mutations: {
@@ -22,6 +24,9 @@ const longinModule: Module<ILoginState, IRootState> = {
     },
     changeUserInfo(state, userInfo: any) {
       state.userInfo = userInfo
+    },
+    changeUserMenus(state, userMenus: any) {
+      state.userMenus = userMenus
     }
   },
   actions: {
@@ -41,7 +46,25 @@ const longinModule: Module<ILoginState, IRootState> = {
       // 请求用户菜单
       const userMenusResult = await requestUserMenusByRoleId(userInfo.role.id)
       const userMenus = userMenusResult.data
-      console.log(userMenus)
+      commit('changeUserMenus', userMenus)
+      localCache.setCache('userMenus', userMenus)
+
+      // 跳转到首页
+      router.push('/main')
+    },
+    loadLocalLogin({ commit }) {
+      const token = localCache.getCache('token')
+      if (token) {
+        commit('changeToken', token)
+      }
+      const userInfo = localCache.getCache('userInfo')
+      if (userInfo) {
+        commit('changeUserInfo', userInfo)
+      }
+      const userMenus = localCache.getCache('userMenus')
+      if (userMenus) {
+        commit('changeUserMenus', userMenus)
+      }
     },
     phoneLoginAction({ commit }, payload: any) {
       console.log('action', payload)
