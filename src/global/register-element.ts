@@ -10,7 +10,11 @@ import {
   ElFormItem,
   ElInput,
   ElCheckbox,
-  ElLink
+  ElLink,
+  ElContainer,
+  ElHeader,
+  ElAside,
+  ElMain
 } from 'element-plus/lib'
 
 const components = [
@@ -22,7 +26,11 @@ const components = [
   ElFormItem,
   ElInput,
   ElCheckbox,
-  ElLink
+  ElLink,
+  ElContainer,
+  ElHeader,
+  ElAside,
+  ElMain
 ]
 export default function (app: App): void {
   for (const component of components) {
