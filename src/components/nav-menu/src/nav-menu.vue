@@ -2,11 +2,12 @@
   <div class="nav-menu">
     <div class="logo">
       <img class="img" src="~@/assets/img/logo.svg" alt="logo" />
-      <span class="title">Vue3-admine</span>
+      <span v-if="!collapse" class="title">Vue3-admine</span>
     </div>
 
     <el-menu
-      default-active="1"
+      default-active="2"
+      :collapse="collapse"
       class="el-menu-vertical"
       background-color="#0c2135"
       text-color="#b7bdc3"
@@ -17,12 +18,17 @@
         <template v-if="item.type === 1">
           <el-sub-menu :index="item.id + ''">
             <template #title>
-              <i v-if="item.icon" :class="item.icon"></i>
+              <!-- 后台icon数据不对，先写死 -->
+              <el-icon v-if="item.icon" :size="20" :color="'#fff'">
+                <component :is="'Monitor'" />
+              </el-icon>
               <span>{{ item.name }}</span>
             </template>
             <template v-for="subitem in item.children" :key="subitem.id">
               <el-menu-item :index="subitem.id + ''">
-                <i v-if="subitem.icon" :class="subitem.icon"></i>
+                <el-icon v-if="subitem.icon" :size="20" :color="'#fff'">
+                  <component :is="subitem.icon" />
+                </el-icon>
                 <span>{{ subitem.name }}</span>
               </el-menu-item>
             </template>
@@ -31,7 +37,9 @@
         <!-- 一级菜单 -->
         <template v-else-if="item.type === 2">
           <el-menu-item :index="item.id + ''">
-            <i v-if="item.icon" :class="item.icon"></i>
+            <el-icon v-if="item.icon" :size="20" :color="'#fff'">
+              <component :is="item.icon" />
+            </el-icon>
             <span>{{ item.name }}</span>
           </el-menu-item>
         </template>
@@ -43,6 +51,12 @@
 import { defineComponent, computed } from 'vue'
 import { useStore } from '@/store'
 export default defineComponent({
+  props: {
+    collapse: {
+      type: Boolean,
+      default: false
+    }
+  },
   setup() {
     const store = useStore()
     const userMenus = computed(() => store.state.login.userMenus)
@@ -78,8 +92,11 @@ export default defineComponent({
   }
 }
 
+.el-menu {
+  border-right: none;
+}
 // 目录
-.el-submenu {
+.el-sub-menu {
   background-color: #001529 !important;
   // 二级菜单 ( 默认背景 )
   .el-menu-item {
@@ -88,7 +105,7 @@ export default defineComponent({
   }
 }
 
-:deep .el-submenu__title {
+:deep .el-sub-menu__title {
   background-color: #001529 !important;
 }
 
