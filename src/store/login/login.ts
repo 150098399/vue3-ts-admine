@@ -29,7 +29,7 @@ const longinModule: Module<ILoginState, IRootState> = {
     changeUserMenus(state, userMenus: any) {
       state.userMenus = userMenus
       const routes = mapMenuToRoutes(userMenus)
-      // 将routes ==> 添加到 router,main.children
+      // 将routes --> 添加到 router,main.children
       routes.forEach((route) => {
         router.addRoute('main', route)
       })
