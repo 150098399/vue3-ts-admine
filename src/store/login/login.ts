@@ -6,6 +6,7 @@ import {
   requestUserInfoById,
   requestUserMenusByRoleId
 } from '@/service/login/login'
+import { mapMenuToRoutes } from '@/utils/map-menus'
 import { IAccount } from '@/service/login/types'
 import localCache from '@/utils/cache'
 import router from '@/router'
@@ -27,6 +28,11 @@ const longinModule: Module<ILoginState, IRootState> = {
     },
     changeUserMenus(state, userMenus: any) {
       state.userMenus = userMenus
+      const routes = mapMenuToRoutes(userMenus)
+      // 将routes --> 添加到 router,main.children
+      routes.forEach((route) => {
+        router.addRoute('main', route)
+      })
     }
   },
   actions: {
