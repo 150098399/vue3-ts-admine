@@ -16,6 +16,8 @@ registerApp(app)
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
 }
-
+app.use(store)
 setupStore()
-app.use(store).use(router).mount('#app')
+app.use(router)
+
+app.mount('#app')
