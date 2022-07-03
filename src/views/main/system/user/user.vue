@@ -3,16 +3,24 @@
     <div class="search">
       <page-search :searchFormConfig="searchFormConfig"></page-search>
     </div>
+    <div class="content">
+      <my-table :listData="userList" :propList="propList">
+        <template #enable="scope">
+          <el-button>{{ scope.row.enable }}</el-button>
+        </template>
+      </my-table>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import { useStore } from 'vuex'
+import { defineComponent, computed } from 'vue'
+import { useStore } from '@/store'
 import { searchFormConfig } from './config/search.config'
 import PageSearch from '@/components/page-search'
+import MyTable from '@/base-ui/table'
 export default defineComponent({
-  components: { PageSearch },
+  components: { PageSearch, MyTable },
   name: 'user',
   setup() {
     const store = useStore()
@@ -23,9 +31,28 @@ export default defineComponent({
         size: 10
       }
     })
-    return { searchFormConfig }
+    const userList = computed(() => store.state.system.userList)
+    const userCount = computed(() => store.state.system.userCount)
+
+    const propList = [
+      { prop: 'name', label: '用户名', minWidth: '100' },
+      { prop: 'realname', label: '真实姓名', minWidth: '100' },
+      { prop: 'cellphone', label: '手机号码', minWidth: '100' },
+      { prop: 'enable', label: '状态', minWidth: '100' },
+      { prop: 'createAt', label: '创建时间', minWidth: '250' },
+      { prop: 'updateAt', label: '更新时间', minWidth: '250' }
+    ]
+    return { searchFormConfig, userList, userCount, propList }
   }
 })
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.user {
+  height: 100%;
+}
+.content {
+  padding: 20px;
+  border-top: 20px solid #f5f5f5;
+}
+</style>
