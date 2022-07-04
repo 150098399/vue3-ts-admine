@@ -27,6 +27,8 @@ const systemModule: Module<ISystemState, IRootState> = {
         payload.queryInfo
       )
       const { list, totalCount } = pageResult.data
+      console.log(list)
+
       commit('changeUserList', list)
       commit('changeUserCount', totalCount)
     }
