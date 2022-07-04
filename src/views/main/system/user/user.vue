@@ -6,11 +6,17 @@
     <div class="content">
       <my-table
         :listData="userList"
+        :title="title"
         :propList="propList"
         :showIndexColumn="showIndexColumn"
         :showSelectColumn="showSelectColumn"
         @selectionChange="handleSelectionChange"
       >
+        <!-- 头部插槽 -->
+        <template #headerHandle>
+          <el-button type="primary">新建用户</el-button>
+        </template>
+        <!-- 列插槽  -->
         <template #status="scope">
           <el-button
             plain
@@ -57,6 +63,7 @@ export default defineComponent({
     const userList = computed(() => store.state.system.userList)
     const userCount = computed(() => store.state.system.userCount)
 
+    const title = '用户列表'
     const propList = [
       { prop: 'name', label: '用户名', minWidth: '100' },
       { prop: 'realname', label: '真实姓名', minWidth: '100' },
@@ -89,6 +96,7 @@ export default defineComponent({
       userList,
       userCount,
       propList,
+      title,
       showIndexColumn,
       showSelectColumn,
       handleSelectionChange
