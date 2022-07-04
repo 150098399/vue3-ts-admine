@@ -4,9 +4,32 @@
       <page-search :searchFormConfig="searchFormConfig"></page-search>
     </div>
     <div class="content">
-      <my-table :listData="userList" :propList="propList">
-        <template #enable="scope">
-          <el-button>{{ scope.row.enable }}</el-button>
+      <my-table
+        :listData="userList"
+        :propList="propList"
+        :showIndexColumn="showIndexColumn"
+        :showSelectColumn="showSelectColumn"
+        @selectionChange="handleSelectionChange"
+      >
+        <template #status="scope">
+          <el-button
+            plain
+            size="small"
+            :type="scope.row.enable ? 'success' : 'danger'"
+            >{{ scope.row.enable === 1 ? '启用' : '禁用' }}</el-button
+          >
+        </template>
+        <template #createAt="scope">
+          <span>{{ $filters.formatTime(scope.row.createAt) }}</span>
+        </template>
+        <template #updateAt="scope">
+          <span>{{ $filters.formatTime(scope.row.updateAt) }}</span>
+        </template>
+        <template #handle>
+          <div class="handle-btns">
+            <el-button size="small" type="text">编辑</el-button>
+            <el-button size="small" type="text">删除</el-button>
+          </div>
         </template>
       </my-table>
     </div>
@@ -38,11 +61,38 @@ export default defineComponent({
       { prop: 'name', label: '用户名', minWidth: '100' },
       { prop: 'realname', label: '真实姓名', minWidth: '100' },
       { prop: 'cellphone', label: '手机号码', minWidth: '100' },
-      { prop: 'enable', label: '状态', minWidth: '100' },
-      { prop: 'createAt', label: '创建时间', minWidth: '250' },
-      { prop: 'updateAt', label: '更新时间', minWidth: '250' }
+      { prop: 'enable', label: '状态', minWidth: '100', slotName: 'status' },
+      {
+        prop: 'createAt',
+        label: '创建时间',
+        minWidth: '250',
+        slotName: 'createAt'
+      },
+      {
+        prop: 'updateAt',
+        label: '更新时间',
+        minWidth: '250',
+        slotName: 'updateAt'
+      },
+      { label: '操作', minWidth: '120', slotName: 'handle' }
     ]
-    return { searchFormConfig, userList, userCount, propList }
+
+    const showIndexColumn = true
+    const showSelectColumn = true
+
+    const handleSelectionChange = (val: any) => {
+      console.log(val)
+    }
+
+    return {
+      searchFormConfig,
+      userList,
+      userCount,
+      propList,
+      showIndexColumn,
+      showSelectColumn,
+      handleSelectionChange
+    }
   }
 })
 </script>
