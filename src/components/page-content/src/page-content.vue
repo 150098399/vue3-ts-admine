@@ -2,8 +2,10 @@
   <div class="page-content">
     <my-table
       :listData="dataList"
+      :listCount="dataCount"
       v-bind="contentTableConfig"
       @selectionChange="handleSelectionChange"
+      v-model:page="pageInfo"
     >
       <!-- 头部插槽 -->
       <template #headerHandle>
@@ -35,7 +37,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, ref, computed, watch } from 'vue'
 import { useStore } from '@/store'
 import MyTable from '@/base-ui/table'
 
@@ -53,12 +55,18 @@ export default defineComponent({
   },
   setup(props) {
     const store = useStore()
+    // 双向绑定pageInfo
+    const pageInfo = ref({ currentPage: 0, pageSize: 10 })
+    watch(pageInfo, () => {
+      getPageData()
+    })
+    // 发送网络请求
     const getPageData = (queryInfo: any = {}) => {
       store.dispatch('system/getPageListAction', {
         pageName: props.pageName,
         queryInfo: {
-          offset: 0,
-          size: 10,
+          offset: pageInfo.value.currentPage * pageInfo.value.pageSize,
+          size: pageInfo.value.pageSize,
           ...queryInfo
         }
       })
@@ -67,12 +75,14 @@ export default defineComponent({
     const dataList = computed(() =>
       store.getters[`system/pageListData`](props.pageName)
     )
-    // const userCount = computed(() => store.state.system.userCount)
+    const dataCount = computed(() =>
+      store.getters[`system/pageListCount`](props.pageName)
+    )
 
     const handleSelectionChange = (val: any) => {
       console.log(val)
     }
-    return { dataList, handleSelectionChange, getPageData }
+    return { dataList, dataCount, pageInfo, handleSelectionChange, getPageData }
   }
 })
 </script>
