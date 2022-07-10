@@ -6,7 +6,7 @@
       </template>
       <template #footer>
         <div class="handel-btns">
-          <el-button type="primary">搜索</el-button>
+          <el-button type="primary" @click="handleQueryClick">搜索</el-button>
           <el-button type="primary" @click="handleResetClick">重置</el-button>
         </div>
       </template>
@@ -26,7 +26,8 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props) {
+  emits: ['resetBtnClick', 'queryBtnClick'],
+  setup(props, { emit }) {
     // 表单双向绑定
     const formItems = props.searchFormConfig?.formItems ?? []
     const formOriginData: any = {}
@@ -37,8 +38,14 @@ export default defineComponent({
     // 表单重置操作
     const handleResetClick = () => {
       formData.value = formOriginData
+      emit('resetBtnClick')
     }
-    return { formData, handleResetClick }
+
+    // 表单搜索
+    const handleQueryClick = () => {
+      emit('queryBtnClick', formData.value)
+    }
+    return { formData, handleResetClick, handleQueryClick }
   }
 })
 </script>
