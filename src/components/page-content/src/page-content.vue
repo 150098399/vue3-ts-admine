@@ -32,6 +32,17 @@
           <el-button size="small" type="text">删除</el-button>
         </div>
       </template>
+
+      <!-- 动态插入剩余插槽 -->
+      <template
+        v-for="item in otherPropSlots"
+        :key="item.prop"
+        #[item.slotName]="scope"
+      >
+        <template v-if="item.slotName">
+          <slot :name="item.slotName" :row="scope.row"></slot>
+        </template>
+      </template>
     </my-table>
   </div>
 </template>
@@ -72,6 +83,8 @@ export default defineComponent({
       })
     }
     getPageData()
+
+    // 从vuex中获取数据
     const dataList = computed(() =>
       store.getters[`system/pageListData`](props.pageName)
     )
@@ -82,7 +95,30 @@ export default defineComponent({
     const handleSelectionChange = (val: any) => {
       console.log(val)
     }
-    return { dataList, dataCount, pageInfo, handleSelectionChange, getPageData }
+
+    // 获取其他动态插槽名称
+    const otherPropSlots = props.contentTableConfig?.propList.filter(
+      (item: any) => {
+        if (
+          item.slotName === 'status' ||
+          item.slotName === 'createAt' ||
+          item.slotName === 'updateAt' ||
+          item.slotName === 'handle'
+        ) {
+          return false
+        } else {
+          return true
+        }
+      }
+    )
+    return {
+      dataList,
+      dataCount,
+      pageInfo,
+      otherPropSlots,
+      handleSelectionChange,
+      getPageData
+    }
   }
 })
 </script>
